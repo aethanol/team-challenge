@@ -295,6 +295,7 @@ class PasswordConfirmationInput extends React.Component {
         {errors.mismatched &&
           <p className="help-block error-mismatched">passwords don't match</p>
         }
+        {!errors.isValid && <p className="help-block error-missing">please confirm your password</p>}
       </div>
     );
   }
