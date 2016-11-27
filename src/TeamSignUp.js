@@ -139,10 +139,12 @@ class EmailInput extends React.Component {
 class RequiredInput extends React.Component {
   validate(currentValue){
     if(currentValue === ''){ //check presence
+    
       return {required: true, isValid: false};
+    } else {
+     
+      return {isValid: true}; //no errors
     }
-
-    return {isValid: true}; //no errors
   }  
   
   handleChange(event){  
@@ -171,7 +173,7 @@ class RequiredInput extends React.Component {
                 value={this.props.value}
                 onChange={(e) => this.handleChange(e)}
         />
-        {errors &&
+        {!errors.isValid &&
           <p className="help-block error-missing">{this.props.errorMessage}</p>
         }
       </div>
