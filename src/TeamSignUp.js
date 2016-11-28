@@ -33,7 +33,7 @@ class SignUpForm extends React.Component {
   //callback for the submit button
   handleSubmit(event) {
     event.preventDefault();
-    
+    //console.log(event);
     this.props.submitCallback(this.state);
   }
 

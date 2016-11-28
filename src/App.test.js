@@ -58,13 +58,13 @@ describe('<EmailInput /> component', () => {
 });
 
 describe('<RequiredInput /> name component', () => {
-  it("if user hasnt entered a name", () => {
+  it("should show error if user hasnt entered a name", () => {
     const wrapper = shallow(<RequiredInput value={''} errorMessage={"we need to know your name"} />);
     expect(wrapper.find('.error-missing').text()).toEqual("we need to know your name");
 
   });
 
-  it("if user has entered a name", () => {
+  it("should NOT show error if user has entered a name", () => {
     const wrapper = shallow(<RequiredInput value={'Hey'} />);
     expect(wrapper.find('.error-missing').length).toEqual(0);
 
@@ -115,7 +115,7 @@ describe("<PasswordConfirmationInput /> component", () => {
 });
 
 describe('Submit button', () => {
-  it('should be disabled if any of the forms are invalid', () => {
+  it('should be disabled if any of the forms are invalid, but not if they are valid', () => {
     const wrapper=mount(<SignUpForm />);
     // valid email consts
     const email = 'valid@gmail.com';
@@ -151,12 +151,36 @@ describe('Submit button', () => {
     wrapper.find('#password').simulate('change', {target:{value: password}}); // change back to be valid
     
     // check password conf field
-    wrapper.find("#passwordConf").simulate('change', {target:{value: 'NOT MATCHING'}});
+    wrapper.find("#passwordConf").simulate('change', {target:{value: 'eh'}});
     expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
     wrapper.find("#passwordConf").simulate('change', {target:{value: password}}); // change back to be valid
 
-    //wrapper.find('#submitButton').simulate('click');
+    //
     // console.log(wrapper.state());
+    
+  });
+
+  it('should handle clicks properly', () => {
+    
+    //const handleSubmitSpy = sinon.spy(SignUpForm.prototype, 'handleSubmit');
+
+    const clickSpy = sinon.spy();
+    const wrapper=mount(<SignUpForm handleSubmit={clickSpy}/>);
+    // valid email consts
+    const email = 'valid@gmail.com';
+    const name = 'validname';
+    const dob = '1';
+    const password = 'password';
+
+    wrapper.find('#email').simulate('change', {target:{value: email}});
+    wrapper.find('#name').simulate('change', {target:{value: name}});
+    wrapper.find('#dob').simulate('change', {target:{value: dob}}); 
+    wrapper.find('#password').simulate('change', {target:{value: password}});
+    wrapper.find("#passwordConf").simulate('change', {target:{value: password}});
+    wrapper.find('#submitButton').simulate('click');
+    //expect(wrapper.find('#submitButton').prop('disabled')).toEqual(false);
+    //console.log(param);
+    expect(clickSpy.called).toEqual(true);
     
   });
 });
