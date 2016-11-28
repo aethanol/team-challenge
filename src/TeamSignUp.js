@@ -111,9 +111,11 @@ class EmailInput extends React.Component {
 
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
+    
     var inputStyle = 'form-group';
     if(!errors.isValid) inputStyle += ' invalid'; //add styling rule
-
+    var error = errors.missing ? <p className="help-block error-missing">we need to know your email address</p> : !errors.isValid 
+                                ? <p className="help-block error-invalid">this is not a valid email address</p> : <div></div>; // return only one 
     return (
       <div className={inputStyle}>
         <label htmlFor="email">Email</label>
@@ -121,17 +123,17 @@ class EmailInput extends React.Component {
                 value={this.props.value}
                 onChange={(e) => this.handleChange(e)}
         />
-        {errors.missing &&
-          <p className="help-block error-missing">we need to know your email address</p>
-        }
-        {errors.invalid &&
-          <p className="help-block error-invalid">this is not a valid email address</p>
-        }
+        {error}
       </div>
     );
   }
 }
-
+// {errors.missing &&
+//           <p className="help-block error-missing">we need to know your email address</p>
+//         }
+//         {!errors.isValid &&
+//           <p className="help-block error-invalid">this is not a valid email address</p>
+//         }
 
 /**
  * A component representing a controlled input for a generic required field
@@ -139,10 +141,12 @@ class EmailInput extends React.Component {
 class RequiredInput extends React.Component {
   validate(currentValue){
     if(currentValue === ''){ //check presence
+    
       return {required: true, isValid: false};
+    } else {
+     
+      return {isValid: true}; //no errors
     }
-
-    return {isValid: true}; //no errors
   }  
   
   handleChange(event){  
@@ -171,7 +175,7 @@ class RequiredInput extends React.Component {
                 value={this.props.value}
                 onChange={(e) => this.handleChange(e)}
         />
-        {errors &&
+        {!errors.isValid &&
           <p className="help-block error-missing">{this.props.errorMessage}</p>
         }
       </div>
@@ -201,6 +205,7 @@ class BirthdayInput extends React.Component {
     var minTimestamp = d.getTime();
     if(timestamp > minTimestamp){
       return {notOldEnough:true, isValid:true}
+
     }
 
     return {isValid: true}; //no errors
