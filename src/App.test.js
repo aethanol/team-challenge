@@ -37,6 +37,8 @@ describe("reset button", () => {
   it ('should reset all fields to be empty upon clicking', () => {
     const wrapper=shallow(<SignUpForm email="10@10.com" name="Oorja" dob="sfdsdf" password="fhdsofwe" passwordConf="dslfhwoeh"/>);
 
+    console.log(wrapper.state());
+    
     wrapper.find('#resetButton').simulate('click');
 
     expect(wrapper.state().email.value).toEqual('');
