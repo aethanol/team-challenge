@@ -24,7 +24,7 @@ class SignUpForm extends React.Component {
 
   //callback for the reset button
   handleReset(event) {
-    console.log('Reset!');
+    
     var emptyState = {};
     this.setState(emptyState);
   }
@@ -32,7 +32,7 @@ class SignUpForm extends React.Component {
   //callback for the submit button
   handleSubmit(event) {
     event.preventDefault();
-    console.log('Submitted!');
+    
     this.props.submitCallback(this.state);
   }
 
@@ -228,7 +228,7 @@ class BirthdayInput extends React.Component {
 
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
-    console.log(errors);
+    
     var inputStyle = 'form-group';
     if(!errors.isValid) inputStyle += ' invalid';
     var error = errors.missing ? <p className="help-block error-missing">we need to know your birthdate</p>
@@ -247,16 +247,6 @@ class BirthdayInput extends React.Component {
     );
   }
 }
-
-// {errors.missing &&
-//           <p className="help-block error-missing">we need to know your birthdate</p>
-//         }
-//         {!errors.isValid &&
-//           <p className="help-block error-invalid">that isn't a valid date</p>
-//         }
-//         {errors.notOldEnough &&
-//           <p className="help-block error-not-old">sorry, you must be at least 13 to sign up</p>
-//         }
 
 
 /**
