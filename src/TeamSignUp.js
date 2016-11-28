@@ -15,6 +15,7 @@ class SignUpForm extends React.Component {
     };
 
     this.updateState = this.updateState.bind(this); //bind for scope
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   //callback for updating the state with child information
@@ -39,7 +40,7 @@ class SignUpForm extends React.Component {
   render() {
     //if all fields are valid, button should be enabled
     var buttonEnabled = (this.state.email.valid && this.state.name.valid && this.state.dob.isValid && this.state.password.valid);
-
+    console.log(buttonEnabled);
     return (
       <form name="signupForm" onSubmit={(e) => this.handleSubmit(e)}>
 
@@ -66,7 +67,7 @@ class SignUpForm extends React.Component {
         {/* Submit Buttons */}
         <div className="form-group">
           <button id="resetButton" type="reset" className="btn btn-default" onClick={(e)=>this.handleReset(e)}>Reset</button> {' ' /*space*/}
-          <button id="submitButton" type="submit" className="btn btn-primary" disabled={buttonEnabled}>Sign Me Up!</button>
+          <button id="submitButton" type="submit" className="btn btn-primary" disabled={!buttonEnabled}>Sign Me Up!</button>
         </div>
 
       </form>

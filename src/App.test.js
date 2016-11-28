@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 import { EmailInput, RequiredInput, BirthdayInput, PasswordConfirmationInput } from './TeamSignUp';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
+import sinon from 'sinon';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -85,4 +86,6 @@ describe('<RequiredInput /> password component', () => {
 
 });
 
-
+describe('Submit component', () => {
+  
+});
