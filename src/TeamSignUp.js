@@ -4,28 +4,37 @@ import React from 'react';
  * The overall form component
  */
 class SignUpForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = { //track values and overall validity of each field
-      email:{value:'',valid:false}, 
-      name:{value:'',valid:false},
-      dob:{value:'',valid:false},
-      password:{value:'',valid:false},
-      passwordConf:{value:'',valid:false}
+      email: { value: '', valid: false },
+      name: { value: '', valid: false },
+      dob: { value: '', valid: false },
+      password: { value: '', valid: false },
+      passwordConf: { value: '', valid: false }
     };
 
     this.updateState = this.updateState.bind(this); //bind for scope
+    this.handleReset = this.handleReset.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
   }
 
   //callback for updating the state with child information
-  updateState(stateChange){
+  updateState(stateChange) {
     this.setState(stateChange);
   }
 
   //callback for the reset button
   handleReset(event) {
     console.log('Reset!');
-    var emptyState = {};
+    var emptyState = {
+      email: { value: '', valid: false },
+      name: { value: '', valid: false },
+      dob: { value: '', valid: false },
+      password: { value: '', valid: false },
+      passwordConf: { value: '', valid: false }
+    };
     this.setState(emptyState);
   }
 
@@ -45,27 +54,27 @@ class SignUpForm extends React.Component {
 
         <EmailInput value={this.state.email.value} updateParent={this.updateState} />
 
-        <RequiredInput 
+        <RequiredInput
           id="name" field="name" type="text"
           label="Name" placeholder="your name"
           errorMessage="we need to know your name"
-          value={this.state.name.value} 
+          value={this.state.name.value}
           updateParent={this.updateState} />
 
-        <BirthdayInput value={this.state.dob.value} updateParent={this.updateState}/>
+        <BirthdayInput value={this.state.dob.value} updateParent={this.updateState} />
 
-        <RequiredInput 
+        <RequiredInput
           id="password" field="password" type="password"
           label="Password" placeholder="your password"
           errorMessage="your password can't be blank"
-          value={this.state.password.value} 
+          value={this.state.password.value}
           updateParent={this.updateState} />
 
         <PasswordConfirmationInput  type="password" value={this.state.passwordConf.value} password={this.state.password.value} updateParent={this.updateState}/>
 
         {/* Submit Buttons */}
         <div className="form-group">
-          <button id="resetButton" type="reset" className="btn btn-default" onClick={(e)=>this.handleReset(e)}>Reset</button> {' ' /*space*/}
+          <button id="resetButton" type="reset" className="btn btn-default" onClick={(e) => this.handleReset(e)}>Reset</button> {' ' /*space*/}
           <button id="submitButton" type="submit" className="btn btn-primary" disabled={buttonEnabled}>Sign Me Up!</button>
         </div>
 
@@ -79,30 +88,30 @@ class SignUpForm extends React.Component {
  * A component representing a controlled input for an email address
  */
 class EmailInput extends React.Component {
-  validate(currentValue){
-    if(currentValue === ''){ //check presence
-      return {missing: true, isValid: false}
+  validate(currentValue) {
+    if (currentValue === '') { //check presence
+      return { missing: true, isValid: false }
     }
 
     //check email validity
     //pattern comparison from w3c https://www.w3.org/TR/html-markup/input.email.html#input.email.attrs.value.single
     var valid = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(currentValue)
-    if(!valid){
-      return {invalidEmail:true, isValid:false};
-    }    
+    if (!valid) {
+      return { invalidEmail: true, isValid: false };
+    }
 
-    return {isValid: true}; //no errors
-  }  
+    return { isValid: true }; //no errors
+  }
 
-  handleChange(event){  
+  handleChange(event) {
     //check validity (to inform parent)
     var isValid = this.validate(event.target.value).isValid;
 
     //what to assign to parent's state
     var stateUpdate = {
       'email': {
-        value:event.target.value,
-        valid:isValid
+        value: event.target.value,
+        valid: isValid
       }
     };
 
@@ -111,49 +120,44 @@ class EmailInput extends React.Component {
 
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
-    var inputStyle = 'form-group';
-    if(!errors.isValid) inputStyle += ' invalid'; //add styling rule
 
+    var inputStyle = 'form-group';
+    if (!errors.isValid) inputStyle += ' invalid'; //add styling rule
+    var error = errors.missing ? <p className="help-block error-missing">we need to know your email address</p> : !errors.isValid
+      ? <p className="help-block error-invalid">this is not a valid email address</p> : <div></div>; // return only one 
     return (
       <div className={inputStyle}>
         <label htmlFor="email">Email</label>
         <input type="email" id="email" name="email" className="form-control" placeholder="email address"
-                value={this.props.value}
-                onChange={(e) => this.handleChange(e)}
-        />
-        {errors.missing &&
-          <p className="help-block error-missing">we need to know your email address</p>
-        }
-        {errors.invalid &&
-          <p className="help-block error-invalid">this is not a valid email address</p>
-        }
+          value={this.props.value}
+          onChange={(e) => this.handleChange(e)}
+          />
+        {error}
       </div>
     );
   }
 }
 
-
-/**
- * A component representing a controlled input for a generic required field
- */
+ //A component representing a controlled input for a generic required field
 class RequiredInput extends React.Component {
-  validate(currentValue){
-    if(currentValue === ''){ //check presence
-      return {required: true, isValid: false};
+  validate(currentValue) {
+    if (currentValue === '') { //check presence
+
+      return { required: true, isValid: false };
+    } else {
+
+      return { isValid: true }; //no errors
     }
-    else{
-      return {isValid: true};
-    }
-  }  
-  
-  handleChange(event){  
+  }
+
+  handleChange(event) {
     //check validity (to inform parent)
     var isValid = this.validate(event.target.value).isValid;
     //what to assign to parent's state
     var stateUpdate = {}
     stateUpdate[this.props.field] = {
-      value:event.target.value,
-      valid:isValid
+      value: event.target.value,
+      valid: isValid
     }
 
     this.props.updateParent(stateUpdate) //update parent state
@@ -162,7 +166,7 @@ class RequiredInput extends React.Component {
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
     var inputStyle = 'form-group';
-    if(!errors.isValid) inputStyle += ' invalid';
+    if (!errors.isValid) inputStyle += ' invalid';
 
     return (
       <div className={inputStyle}>
@@ -184,15 +188,15 @@ class RequiredInput extends React.Component {
  * A component representing a controlled input for a birthdate (min age: 13)
  */
 class BirthdayInput extends React.Component {
-  validate(currentValue){
-    if(currentValue === ''){ //check presence
-      return {missing:true, isValid:false}
+  validate(currentValue) {
+    if (currentValue === '') { //check presence
+      return { missing: true, isValid: false }
     }
 
     //check date validity
     var timestamp = Date.parse(currentValue); //use built-in Date type
-    if(isNaN(timestamp)) { //it not a valid stamp
-      return {notDate:true, isValid:false};
+    if (isNaN(timestamp)) { //it not a valid stamp
+      return { notDate: true, isValid: false };
     }
 
     //check age range
@@ -203,17 +207,17 @@ class BirthdayInput extends React.Component {
       return {notOldEnough:true, isValid:false}
     }
 
-    return {isValid: true}; //no errors
-  }  
-  
-  handleChange(event){  
+    return { isValid: true }; //no errors
+  }
+
+  handleChange(event) {
     //check validity (to inform parent)
     var isValid = this.validate(event.target.value).isValid;
     //what to assign to parent's state
     var stateUpdate = {
       'dob': {
-        value:event.target.value,
-        valid:isValid
+        value: event.target.value,
+        valid: isValid
       }
     };
 
@@ -223,15 +227,15 @@ class BirthdayInput extends React.Component {
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
     var inputStyle = 'form-group';
-    if(!errors.isValid) inputStyle += ' invalid';
+    if (!errors.isValid) inputStyle += ' invalid';
 
     return (
       <div className={inputStyle}>
         <label htmlFor="dob">Birthdate</label>
         <input type="text" id="dob" name="dob" className="form-control" placeholder="your birthdate"
-                value={this.props.value}
-                onChange={(e) => this.handleChange(e)}
-        />
+          value={this.props.value}
+          onChange={(e) => this.handleChange(e)}
+          />
         {errors.missing &&
           <p className="help-block error-missing">we need to know your birthdate</p>
         }
@@ -282,7 +286,7 @@ class PasswordConfirmationInput extends React.Component {
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
     var inputStyle = 'form-group';
-    if(!errors.isValid) inputStyle += ' invalid';
+    if (!errors.isValid) inputStyle += ' invalid';
 
     return (
       <div className={inputStyle}>
@@ -303,4 +307,4 @@ class PasswordConfirmationInput extends React.Component {
 
 //exports: DO NOT REMOVE OR CHANGE THESE
 export default SignUpForm;
-export {EmailInput, RequiredInput, BirthdayInput, PasswordConfirmationInput};
+export { EmailInput, RequiredInput, BirthdayInput, PasswordConfirmationInput };
