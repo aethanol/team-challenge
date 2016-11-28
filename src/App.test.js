@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import {shallow, mount} from 'enzyme';
 
+import SignUpForm from './TeamSignUp';
 import { EmailInput, RequiredInput, BirthdayInput, PasswordConfirmationInput } from './TeamSignUp';
-
 import sinon from 'sinon';
 
 it('renders without crashing', () => {
@@ -88,7 +88,7 @@ describe('<RequiredInput /> password component', () => {
 });
 
 
-describe("<PasswordConfirmationInput> component", () => {
+describe("<PasswordConfirmationInput /> component", () => {
   
   it ('should be able to tell if the form is empty', () => {
     const wrapper=shallow(<PasswordConfirmationInput value={''}/>);
@@ -98,8 +98,7 @@ describe("<PasswordConfirmationInput> component", () => {
 
   it('should be able to tell if the form is not empty', () => {
     const wrapper=shallow(<PasswordConfirmationInput value={'the form is not empty'}/>);
-    var errorMessage = wrapper.find('.error-missing').length;
-    expect(errorMessage).toEqual(0);
+    expect(wrapper.find('.error-missing').length).toEqual(0);
   })
   
   it ('should be able to tell if the passwords do not match', ()  => {
@@ -115,7 +114,50 @@ describe("<PasswordConfirmationInput> component", () => {
   });
 });
 
-describe('Submit component', () => {
-  
+describe('Submit button', () => {
+  it('should be disabled if any of the forms are invalid', () => {
+    const wrapper=mount(<SignUpForm />);
+    // valid email consts
+    const email = 'valid@gmail.com';
+    const name = 'validname';
+    const dob = '1';
+    const password = 'password';
+
+    wrapper.find('#email').simulate('change', {target:{value: email}});
+    wrapper.find('#name').simulate('change', {target:{value: name}});
+    wrapper.find('#dob').simulate('change', {target:{value: dob}}); 
+    wrapper.find('#password').simulate('change', {target:{value: password}});
+    wrapper.find("#passwordConf").simulate('change', {target:{value: password}});
+    expect(wrapper.find('#submitButton').prop('disabled')).toEqual(false);
+    
+    // check email field
+    wrapper.find('#email').simulate('change', {target:{value:'INVALID EMAIL'}});
+    expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
+    wrapper.find('#email').simulate('change', {target:{value: email}}); // change back to be valid
+    
+    // check name field
+    wrapper.find('#name').simulate('change', {target:{value: ''}});
+    expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
+    wrapper.find('#name').simulate('change', {target:{value: name}}); // change back to be valid
+    
+    // check dob field
+    wrapper.find('#dob').simulate('change', {target:{value: 'HI CAMERON'}});
+    expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
+    wrapper.find('#dob').simulate('change', {target:{value: dob}}); // change back to be valid
+
+    // check password field
+    wrapper.find('#password').simulate('change', {target:{value: ''}});
+    expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
+    wrapper.find('#password').simulate('change', {target:{value: password}}); // change back to be valid
+    
+    // check password conf field
+    wrapper.find("#passwordConf").simulate('change', {target:{value: 'NOT MATCHING'}});
+    expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
+    wrapper.find("#passwordConf").simulate('change', {target:{value: password}}); // change back to be valid
+
+    //wrapper.find('#submitButton').simulate('click');
+    // console.log(wrapper.state());
+    
+  });
 });
 

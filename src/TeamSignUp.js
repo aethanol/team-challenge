@@ -39,8 +39,8 @@ class SignUpForm extends React.Component {
 
   render() {
     //if all fields are valid, button should be enabled
-    var buttonEnabled = (this.state.email.valid && this.state.name.valid && this.state.dob.isValid && this.state.password.valid);
-    console.log(buttonEnabled);
+    var buttonEnabled = (this.state.email.valid && this.state.name.valid && this.state.dob.valid && this.state.password.valid && this.state.passwordConf.valid);
+    
     return (
       <form name="signupForm" onSubmit={(e) => this.handleSubmit(e)}>
 
@@ -62,7 +62,7 @@ class SignUpForm extends React.Component {
           value={this.state.password.value} 
           updateParent={this.updateState} />
 
-        <PasswordConfirmationInput  type="password" value={this.state.passwordConf.value} password={this.state.password.value} updateParent={this.updateState}/>
+        <PasswordConfirmationInput type="password" value={this.state.passwordConf.value} password={this.state.password.value} updateParent={this.updateState}/>
 
         {/* Submit Buttons */}
         <div className="form-group">
@@ -129,12 +129,6 @@ class EmailInput extends React.Component {
     );
   }
 }
-// {errors.missing &&
-//           <p className="help-block error-missing">we need to know your email address</p>
-//         }
-//         {!errors.isValid &&
-//           <p className="help-block error-invalid">this is not a valid email address</p>
-//         }
 
 /**
  * A component representing a controlled input for a generic required field
@@ -148,12 +142,7 @@ class RequiredInput extends React.Component {
      
       return {isValid: true}; //no errors
     }
-<<<<<<< HEAD
-=======
-    else{
-      return {isValid: true};
-    }
->>>>>>> origin/password-field
+
   }  
   
   handleChange(event){  
@@ -177,7 +166,7 @@ class RequiredInput extends React.Component {
     return (
       <div className={inputStyle}>
         <label htmlFor={this.props.field}>{this.props.label}</label>
-        <input type={this.props.type} id={this.props.id} name={this.props.field}className="form-control" placeholder={this.props.placeholder}
+        <input type={this.props.type} id={this.props.id} name={this.props.field} className="form-control" placeholder={this.props.placeholder}
                 value={this.props.value}
                 onChange={(e) => this.handleChange(e)}
         />
@@ -210,12 +199,9 @@ class BirthdayInput extends React.Component {
     d.setYear(d.getFullYear() - 13); //subtract 13 from the year
     var minTimestamp = d.getTime();
     if(timestamp > minTimestamp){
-<<<<<<< HEAD
+
       return {notOldEnough:true, isValid:true}
 
-=======
-      return {notOldEnough:true, isValid:false}
->>>>>>> origin/password-field
     }
 
     return {isValid: true}; //no errors
@@ -266,7 +252,7 @@ class PasswordConfirmationInput extends React.Component {
     if (currentValue === '') { 
       return {isValid: false}
     } else { // if the paswordConf field is not blank
-      if(currentValue != this.props.password){ //check both entries
+      if(currentValue !== this.props.password){ //check both entries
         return {mismatched:true, isValid:true}; //field is valid but passwords do not match
       }    
       else {
