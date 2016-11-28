@@ -204,7 +204,8 @@ class BirthdayInput extends React.Component {
     d.setYear(d.getFullYear() - 13); //subtract 13 from the year
     var minTimestamp = d.getTime();
     if(timestamp > minTimestamp){
-      return {notOldEnough:true, isValid:false}
+      return {notOldEnough:true, isValid:true}
+
     }
 
     return {isValid: true}; //no errors
@@ -227,9 +228,13 @@ class BirthdayInput extends React.Component {
 
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
+    console.log(errors);
     var inputStyle = 'form-group';
     if(!errors.isValid) inputStyle += ' invalid';
-
+    var error = errors.missing ? <p className="help-block error-missing">we need to know your birthdate</p>
+                : !errors.isValid ? <p className="help-block error-invalid">that isn't a valid date</p>
+                : errors.notOldEnough ? <p className="help-block error-not-old">sorry, you must be at least 13 to sign up</p>
+                : <div></div>
     return (
       <div className={inputStyle}>
         <label htmlFor="dob">Birthdate</label>
@@ -237,19 +242,21 @@ class BirthdayInput extends React.Component {
                 value={this.props.value}
                 onChange={(e) => this.handleChange(e)}
         />
-        {errors.missing &&
-          <p className="help-block error-missing">we need to know your birthdate</p>
-        }
-        {errors.notDate &&
-          <p className="help-block error-invalid">that isn't a valid date</p>
-        }
-        {errors.notOldEnough &&
-          <p className="help-block error-not-old">sorry, you must be at least 13 to sign up</p>
-        }
+        {error}
       </div>
     );
   }
 }
+
+// {errors.missing &&
+//           <p className="help-block error-missing">we need to know your birthdate</p>
+//         }
+//         {!errors.isValid &&
+//           <p className="help-block error-invalid">that isn't a valid date</p>
+//         }
+//         {errors.notOldEnough &&
+//           <p className="help-block error-not-old">sorry, you must be at least 13 to sign up</p>
+//         }
 
 
 /**
