@@ -84,7 +84,7 @@ class EmailInput extends React.Component {
       return {missing: true, isValid: false}
     }
 
-    //check email validity
+    //checks email validity
     //pattern comparison from w3c https://www.w3.org/TR/html-markup/input.email.html#input.email.attrs.value.single
     var valid = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(currentValue)
     if(!valid){
