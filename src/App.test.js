@@ -30,3 +30,18 @@ describe("<PasswordConfirmationInput> component", () => {
       expect(passwordsMatch).toEqual(0);
   })
 })
+
+describe("reset button", () => {
+  
+  it ('should be reset all fields to be empty upon clicking', () => {
+    const wrapper=shallow(<SignUpForm />);
+    
+    wrapper.find('#resetButton').simulate('click');
+
+    expect(email.value).toEqual('')
+    expect(name.value).toEqual('')
+    expect(dob.value).toEqual('')
+    expect(password.value).toEqual('')
+    expect(passwordConf.value).toEqual('')
+  })
+})
