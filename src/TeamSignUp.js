@@ -57,12 +57,12 @@ class SignUpForm extends React.Component {
 
         <RequiredInput 
           id="password" field="password" type="password"
-          label="Password" placeholder=""
+          label="Password" placeholder="your password"
           errorMessage="your password can't be blank"
           value={this.state.password.value} 
           updateParent={this.updateState} />
 
-        <PasswordConfirmationInput value={this.state.passwordConf.value} password={this.state.password.value} updateParent={this.updateState}/>
+        <PasswordConfirmationInput  type="password" value={this.state.passwordConf.value} password={this.state.password.value} updateParent={this.updateState}/>
 
         {/* Submit Buttons */}
         <div className="form-group">
@@ -148,12 +148,17 @@ class RequiredInput extends React.Component {
      
       return {isValid: true}; //no errors
     }
+<<<<<<< HEAD
+=======
+    else{
+      return {isValid: true};
+    }
+>>>>>>> origin/password-field
   }  
   
   handleChange(event){  
     //check validity (to inform parent)
     var isValid = this.validate(event.target.value).isValid;
-
     //what to assign to parent's state
     var stateUpdate = {}
     stateUpdate[this.props.field] = {
@@ -205,8 +210,12 @@ class BirthdayInput extends React.Component {
     d.setYear(d.getFullYear() - 13); //subtract 13 from the year
     var minTimestamp = d.getTime();
     if(timestamp > minTimestamp){
+<<<<<<< HEAD
       return {notOldEnough:true, isValid:true}
 
+=======
+      return {notOldEnough:true, isValid:false}
+>>>>>>> origin/password-field
     }
 
     return {isValid: true}; //no errors
@@ -215,7 +224,6 @@ class BirthdayInput extends React.Component {
   handleChange(event){  
     //check validity (to inform parent)
     var isValid = this.validate(event.target.value).isValid;
-
     //what to assign to parent's state
     var stateUpdate = {
       'dob': {
@@ -255,11 +263,16 @@ class BirthdayInput extends React.Component {
  */
 class PasswordConfirmationInput extends React.Component {
   validate(currentValue){
-    if(currentValue === '' || this.props.password === ''){ //check both entries
-      return {mismatched:true, isValid:false};
-    }    
-
-    return {isValid: true}; //no errors
+    if (currentValue === '') { 
+      return {isValid: false}
+    } else { // if the paswordConf field is not blank
+      if(currentValue != this.props.password){ //check both entries
+        return {mismatched:true, isValid:true}; //field is valid but passwords do not match
+      }    
+      else {
+        return {mismatched: false, isValid: true}; //no errors
+      }
+    }
   }  
   
   handleChange(event){  
@@ -268,7 +281,7 @@ class PasswordConfirmationInput extends React.Component {
 
     //what to assign to parent's state
     var stateUpdate = {
-      'passConf': {
+      'passwordConf': {
         value:event.target.value,
         valid:isValid
       }
@@ -287,11 +300,13 @@ class PasswordConfirmationInput extends React.Component {
         <label htmlFor="passwordConf">Confirm Password</label>
         <input type="password" id="passwordConf" name="passwordConf" className="form-control"
                 value={this.props.value}
+                placeholder="confirm password"
                 onChange={(e) => this.handleChange(e)}
         />
         {errors.mismatched &&
           <p className="help-block error-mismatched">passwords don't match</p>
         }
+        {!errors.isValid && <p className="help-block error-missing">please confirm your password</p>}
       </div>
     );
   }
