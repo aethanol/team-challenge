@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import {shallow, mount} from 'enzyme';
+import sinon from 'sinon';
 import SignUpForm, {EmailInput, RequiredInput, BirthdayInput, PasswordConfirmationInput } from './teamSignUp'
 
 describe("<PasswordConfirmationInput> component", () => {
@@ -31,22 +32,31 @@ describe("<PasswordConfirmationInput> component", () => {
   })
 })
 
-// describe("reset button", () => {
+describe("reset button", () => {
   
-//   it ('should be reset all fields to be empty upon clicking', () => {
-//     const wrapper=shallow(<SignUpForm email="10@10.com" name="Oorja" dob="sfdsdf" password="fhdsofwe" passwordConf="dslfhwoeh"/>);
+  it ('should reset all fields to be empty upon clicking', () => {
+    const wrapper=shallow(<SignUpForm email="10@10.com" name="Oorja" dob="sfdsdf" password="fhdsofwe" passwordConf="dslfhwoeh"/>);
 
+    wrapper.find('#resetButton').simulate('click');
 
+    expect(wrapper.state().email.value).toEqual('');
+    expect(wrapper.state().name.value).toEqual('');
+    expect(wrapper.state().dob.value).toEqual('');
+    expect(wrapper.state().password.value).toEqual('');
+    expect(wrapper.state().passwordConf.value).toEqual('');
 
-//     wrapper.find('#resetButton').simulate('click');
+  });
 
-//     expect(wrapper.props.email).toEqual()
-//     expect(wrapper.props.name.value).toEqual('')
-//     expect(wrapper.props.dob.value).toEqual('')
-//     expect(wrapper.props.password.value).toEqual('')
-//     expect(wrapper.props.passwordConf.value).toEqual('')
-//   });
-// });
+  it ('should be able to call the handle reset function upon clicking', () => {
+    var resetSpy = sinon.spy(SignUpForm.prototype, 'handleReset')
+    
+    const wrapper=shallow(<SignUpForm email="10@10.com" name="Oorja" dob="sfdsdf" password="fhdsofwe" passwordConf="dslfhwoeh"/>);
+
+    wrapper.find('#resetButton').simulate('click');
+
+    expect(resetSpy.called).toEqual(true);
+  })
+});
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
