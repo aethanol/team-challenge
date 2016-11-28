@@ -252,11 +252,11 @@ class BirthdayInput extends React.Component {
  */
 class PasswordConfirmationInput extends React.Component {
   validate(currentValue){
-    if (currentValue === '') {
+    if (currentValue === '') { 
       return {isValid: false}
-    } else {
+    } else { // if the paswordConf field is not blank
       if(currentValue != this.props.password){ //check both entries
-        return {mismatched:true, isValid:true};
+        return {mismatched:true, isValid:true}; //field is valid but passwords do not match
       }    
       else {
         return {mismatched: false, isValid: true}; //no errors
