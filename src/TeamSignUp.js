@@ -15,13 +15,9 @@ class SignUpForm extends React.Component {
     };
 
     this.updateState = this.updateState.bind(this); //bind for scope
-<<<<<<< HEAD
-    this.handleSubmit = this.handleSubmit.bind(this);
-=======
     this.handleReset = this.handleReset.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
->>>>>>> password-field
   }
 
   //callback for updating the state with child information
@@ -31,11 +27,9 @@ class SignUpForm extends React.Component {
 
   //callback for the reset button
   handleReset(event) {
-<<<<<<< HEAD
-    
+
     var emptyState = {};
-=======
-    console.log('Reset!');
+
     var emptyState = {
       email: { value: '', valid: false },
       name: { value: '', valid: false },
@@ -43,14 +37,13 @@ class SignUpForm extends React.Component {
       password: { value: '', valid: false },
       passwordConf: { value: '', valid: false }
     };
->>>>>>> password-field
     this.setState(emptyState);
   }
 
   //callback for the submit button
   handleSubmit(event) {
     event.preventDefault();
-    //console.log(event);
+    
     this.props.submitCallback(this.state);
   }
 
@@ -83,13 +76,10 @@ class SignUpForm extends React.Component {
 
         {/* Submit Buttons */}
         <div className="form-group">
-<<<<<<< HEAD
+
           <button id="resetButton" type="reset" className="btn btn-default" onClick={(e)=>this.handleReset(e)}>Reset</button> {' ' /*space*/}
           <button id="submitButton" type="submit" className="btn btn-primary" disabled={!buttonEnabled}>Sign Me Up!</button>
-=======
-          <button id="resetButton" type="reset" className="btn btn-default" onClick={(e) => this.handleReset(e)}>Reset</button> {' ' /*space*/}
-          <button id="submitButton" type="submit" className="btn btn-primary" disabled={buttonEnabled}>Sign Me Up!</button>
->>>>>>> password-field
+
         </div>
 
       </form>
@@ -136,7 +126,9 @@ class EmailInput extends React.Component {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
 
     var inputStyle = 'form-group';
-    if (!errors.isValid) inputStyle += ' invalid'; //add styling rule
+    if (!errors.isValid) inputStyle += 'invalid has-error'; //add styling rule
+
+    //ternary operation to conditionally show the right error message
     var error = errors.missing ? <p className="help-block error-missing">we need to know your email address</p> : !errors.isValid
       ? <p className="help-block error-invalid">this is not a valid email address</p> : <div></div>; // return only one 
     return (
@@ -158,23 +150,14 @@ class RequiredInput extends React.Component {
     if (currentValue === '') { //check presence
 
       return { required: true, isValid: false };
-    } else {
-<<<<<<< HEAD
-     
+    } else { 
       return {isValid: true}; //no errors
     }
 
   }  
   
-  handleChange(event){  
-=======
-
-      return { isValid: true }; //no errors
-    }
-  }
 
   handleChange(event) {
->>>>>>> password-field
     //check validity (to inform parent)
     var isValid = this.validate(event.target.value).isValid;
     //what to assign to parent's state
@@ -190,7 +173,7 @@ class RequiredInput extends React.Component {
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
     var inputStyle = 'form-group';
-    if (!errors.isValid) inputStyle += ' invalid';
+    if (!errors.isValid) inputStyle += ' invalid has-error';
 
     return (
       <div className={inputStyle}>
@@ -254,39 +237,24 @@ class BirthdayInput extends React.Component {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
     
     var inputStyle = 'form-group';
-<<<<<<< HEAD
-    if(!errors.isValid) inputStyle += ' invalid';
+
+    //ternary operation to conditionally show the right error message
     var error = errors.missing ? <p className="help-block error-missing">we need to know your birthdate</p>
                 : !errors.isValid ? <p className="help-block error-invalid">that isn't a valid date</p>
                 : errors.notOldEnough ? <p className="help-block error-not-old">sorry, you must be at least 13 to sign up</p>
                 : <div></div>
-=======
-    if (!errors.isValid) inputStyle += ' invalid';
 
->>>>>>> password-field
+    if (!errors.isValid) inputStyle += ' invalid has-error'
+
     return (
       <div className={inputStyle}>
         <label htmlFor="dob">Birthdate</label>
         <input type="text" id="dob" name="dob" className="form-control" placeholder="your birthdate"
-<<<<<<< HEAD
                 value={this.props.value}
                 onChange={(e) => this.handleChange(e)}
         />
         {error}
-=======
-          value={this.props.value}
-          onChange={(e) => this.handleChange(e)}
-          />
-        {errors.missing &&
-          <p className="help-block error-missing">we need to know your birthdate</p>
-        }
-        {errors.notDate &&
-          <p className="help-block error-invalid">that isn't a valid date</p>
-        }
-        {errors.notOldEnough &&
-          <p className="help-block error-not-old">sorry, you must be at least 13 to sign up</p>
-        }
->>>>>>> password-field
+          
       </div>
     );
   }
@@ -328,7 +296,7 @@ class PasswordConfirmationInput extends React.Component {
   render() {
     var errors = this.validate(this.props.value); //need to validate again, but at least isolated
     var inputStyle = 'form-group';
-    if (!errors.isValid) inputStyle += ' invalid';
+    if (!errors.isValid) inputStyle += ' invalid has-error';
 
     return (
       <div className={inputStyle}>
