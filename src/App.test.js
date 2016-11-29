@@ -7,6 +7,66 @@ import TeamSignUp from './TeamSignUp';
 import { EmailInput, RequiredInput, BirthdayInput, PasswordConfirmationInput } from './TeamSignUp';
 import sinon from 'sinon';
 
+describe("<PasswordConfirmationInput> component", () => {
+  
+  it ('should be able to tell if the form is empty', () => {
+    const wrapper=shallow(<PasswordConfirmationInput value={''}/>);
+    var errorMessage = wrapper.find('.error-missing').text();
+    expect(errorMessage).toEqual("please confirm your password");
+  });
+
+  it('should be able to tell if the form is not empty', () => {
+    const wrapper=shallow(<PasswordConfirmationInput value={'the form is not empty'}/>);
+    var errorMessage = wrapper.find('.error-missing').length;
+    expect(errorMessage).toEqual(0);
+  })
+  
+  it ('should be able to tell if the passwords do not match', ()  => {
+     const wrapper=shallow(<PasswordConfirmationInput value={'hi'} password={'not-a-match'}/>)
+     var passwordsMatch = wrapper.find('.error-mismatched').text();
+     expect(passwordsMatch).toEqual("passwords don't match");
+  });
+
+  it('should be able to tell if the passwords match', () => {
+      const wrapper=shallow(<PasswordConfirmationInput value={'match'} password={'match'}/>)
+      var passwordsMatch = wrapper.find('.error-mismatched').length;
+      expect(passwordsMatch).toEqual(0);
+  })
+})
+
+describe("reset button", () => {
+  
+  it ('should reset all fields to be empty upon clicking', () => {
+
+    const wrapper=mount(<SignUpForm />);
+
+    wrapper.find('#email').simulate('change', {target:{value:'10@10.com'}});
+    wrapper.find('#name').simulate('change', {target:{value:'Guy'}});
+    wrapper.find('#dob').simulate('change', {target:{value:'1/1/61'}});
+    wrapper.find('#password').simulate('change', {target:{value:'password'}});
+    wrapper.find('#passwordConf').simulate('change', {target:{value:'password'}});
+    
+    wrapper.find('#resetButton').simulate('click');
+
+    expect(wrapper.state().email.value).toEqual('');
+    expect(wrapper.state().name.value).toEqual('');
+    expect(wrapper.state().dob.value).toEqual('');
+    expect(wrapper.state().password.value).toEqual('');
+    expect(wrapper.state().passwordConf.value).toEqual('');
+
+  });
+
+  it ('should be able to call the handle reset function upon clicking', () => {
+    var resetSpy = sinon.spy(SignUpForm.prototype, 'handleReset')
+    
+    const wrapper=shallow(<SignUpForm />);
+
+    wrapper.find('#resetButton').simulate('click');
+
+    expect(resetSpy.called).toEqual(true);
+  })
+});
+
 it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<App />, div);
@@ -26,6 +86,23 @@ describe('<BirthdayInput /> component', () => {
     expect(wrapper.find('.error-invalid').text()).toEqual("that isn't a valid date")
     && expect(wrapper.find('.error-missing').length).toEqual(0)
     && expect(wrapper.find('.error-not-old').length).toEqual(0);
+  });
+
+  it('should require valid date', () => {
+    var wrapper = shallow(<BirthdayInput value='2015-03-25'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='03/25/2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='Mar 25 2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='25 Mar 2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='Wednesday March 25 2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0);
   });
 
   it('should require age of 13 or older', () => {
