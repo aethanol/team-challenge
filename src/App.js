@@ -16,7 +16,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="container">
         <div className="App-header">
           <h2>Sign Up</h2>
           <p>Our service is fun and awesome, but you must be 13 years old to join</p>

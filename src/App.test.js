@@ -30,37 +30,67 @@ describe('<EmailInput /> component', () => {
     const wrapper = shallow(<EmailInput value={'test@gmail.com'}/>);
     expect(wrapper.find('.help-block').length).toEqual(0); // grab the help block class
   });
+
+  it('should call updateParent', () => {
+    const spy = sinon.spy();
+    const wrapper = shallow(<EmailInput value={''} updateParent={spy}/>);
+    wrapper.find('#email').simulate('change', {target:{value: 'email@gmail.com'}});
+    expect(spy.called).toEqual(true);
+  });
 });
 
 
 describe('Name <RequiredInput /> component', () => {
   it("should show error if user hasnt entered a name", () => {
-    const wrapper = shallow(<RequiredInput value={''} errorMessage={"we need to know your name"} />);
+    const wrapper = shallow(<RequiredInput field={"name"} value={''} errorMessage={"we need to know your name"} />);
     expect(wrapper.find('.error-missing').text()).toEqual("we need to know your name");
 
   });
 
   it("should NOT show error if user has entered a name", () => {
-    const wrapper = shallow(<RequiredInput value={'Hey'} />);
+    const wrapper = shallow(<RequiredInput field={"name"} value={'Hey'} />);
     expect(wrapper.find('.error-missing').length).toEqual(0);
 
+  });
+
+  it('should call updateParent', () => {
+    const spy = sinon.spy();
+    const wrapper = shallow(<RequiredInput id="name" field="name" type="text"
+          label="Name" placeholder="your name"
+          errorMessage="we need to know your name"
+          value={''}
+          updateParent={spy}/>);
+
+    wrapper.find('#name').simulate('change', {target:{value: 'datboi'}});
+    
+    expect(spy.called).toEqual(true);
   });
 });
 
 describe('Password <RequiredInput /> component', () => {
-   it("if user hasnt entered a password", () => {
-    const wrapper = shallow(<RequiredInput value={''} errorMessage={"your password can't be blank"} />);
+   it("should error if user hasnt entered a password", () => {
+    const wrapper = shallow(<RequiredInput field={"password"} value={''} errorMessage={"your password can't be blank"} />);
     expect(wrapper.find('.error-missing').text()).toEqual("your password can't be blank");
 
   });
   
-  it("if user has entered a password", () => {
-    const wrapper = shallow(<RequiredInput value={'password'} />);
+  it("should NOT error if user has entered a password", () => {
+    const wrapper = shallow(<RequiredInput field={"password"} value={'password'} />);
     expect(wrapper.find('.error-missing').length).toEqual(0);
 
   });
 
-
+  it('should call updateParent', () => {
+    const spy = sinon.spy();
+    const wrapper = shallow(<RequiredInput id="password" field="password" type="text"
+          label="Name" placeholder="your name"
+          errorMessage="your password can't be blank"
+          value={''}
+          updateParent={spy}/>);
+    wrapper.find('#password').simulate('change', {target:{value: 'aiiiiii'}});
+    expect(spy.called).toEqual(true);
+  });
+  
 });
 
 describe("<PasswordConfirmationInput /> component", () => {
@@ -89,6 +119,13 @@ describe("<PasswordConfirmationInput /> component", () => {
       wrapper.find("#passwordConf").simulate('change', {target:{value: 'password'}});
       expect(wrapper.find('.error-mismatched').length).toEqual(0);
   });
+
+  it('should call updateParent', () => {
+    const spy = sinon.spy();
+    const wrapper=shallow(<PasswordConfirmationInput value={''} updateParent={spy}/>);
+    wrapper.find("#passwordConf").simulate('change', {target:{value: 'TEST'}});
+    expect(spy.called).toEqual(true);
+  });
 });
 
 describe('<BirthdayInput /> component', () => {
@@ -107,16 +144,16 @@ describe('<BirthdayInput /> component', () => {
   });
 
   it('should require valid date', () => {
-    var wrapper = shallow(<BirthdayInput value='2015-03-25'/>); // pass in a blank value prop
+    var wrapper = shallow(<BirthdayInput value='2015-03-25'/>); 
     expect(wrapper.find('.error-invalid').length).toEqual(0)
 
-    wrapper = shallow(<BirthdayInput value='03/25/2015'/>); // pass in a blank value prop
+    wrapper = shallow(<BirthdayInput value='03/25/2015'/>); 
     expect(wrapper.find('.error-invalid').length).toEqual(0)
 
-    wrapper = shallow(<BirthdayInput value='Mar 25 2015'/>); // pass in a blank value prop
+    wrapper = shallow(<BirthdayInput value='Mar 25 2015'/>); 
     expect(wrapper.find('.error-invalid').length).toEqual(0)
 
-    wrapper = shallow(<BirthdayInput value='25 Mar 2015'/>); // pass in a blank value prop
+    wrapper = shallow(<BirthdayInput value='25 Mar 2015'/>); 
     expect(wrapper.find('.error-invalid').length).toEqual(0)
 
     wrapper = shallow(<BirthdayInput value='Wednesday March 25 2015'/>); // pass in a blank value prop
@@ -128,6 +165,13 @@ describe('<BirthdayInput /> component', () => {
     expect(wrapper.find('.error-not-old').text()).toEqual("sorry, you must be at least 13 to sign up")
     && expect(wrapper.find('.error-missing').length).toEqual(0)
     && expect(wrapper.find('.error-invalid').length).toEqual(0);
+  });
+
+  it('should call updateParent', () => {
+    const spy = sinon.spy();
+    const wrapper = shallow(<BirthdayInput value='' updateParent={spy} />);
+    wrapper.find("#dob").simulate('change', {target:{value: '2015-03-25'}});
+    expect(spy.called).toEqual(true);
   });
 });
 

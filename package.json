@@ -1,9 +1,12 @@
 {
   "name": "team-challenge",
+  "author": "Ethan Anderson, Oorja Chowdhary, Hannah Mansoori, Allen Cho",
+  "homepage": "https://aethanol.github.io/team-challenge",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
     "enzyme": "^2.6.0",
+    "gh-pages": "^0.12.0",
     "jest": "^17.0.3",
     "react-addons-test-utils": "^15.4.1",
     "react-scripts": "0.7.0",
@@ -18,6 +21,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
   }
 }
