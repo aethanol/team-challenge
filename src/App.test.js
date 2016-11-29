@@ -28,6 +28,23 @@ describe('<BirthdayInput /> component', () => {
     && expect(wrapper.find('.error-not-old').length).toEqual(0);
   });
 
+  it('should require valid date', () => {
+    var wrapper = shallow(<BirthdayInput value='2015-03-25'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='03/25/2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='Mar 25 2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='25 Mar 2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0)
+
+    wrapper = shallow(<BirthdayInput value='Wednesday March 25 2015'/>); // pass in a blank value prop
+    expect(wrapper.find('.help-block').length).toEqual(0);
+  });
+
   it('should require age of 13 or older', () => {
     const wrapper = shallow(<BirthdayInput value='Mar 25 2015'/>); // pass in a blank value prop
     expect(wrapper.find('.error-not-old').text()).toEqual("sorry, you must be at least 13 to sign up")
