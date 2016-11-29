@@ -115,7 +115,7 @@ describe("<PasswordConfirmationInput /> component", () => {
 });
 
 describe('Submit button', () => {
-  it('should be disabled if any of the forms are invalid, but not if they are valid', () => {
+  it('should be enabled if all of the forms are valid', () => {
     const wrapper=mount(<TeamSignUp />);
     // valid email consts
     const email = 'valid@gmail.com';
@@ -131,6 +131,19 @@ describe('Submit button', () => {
     wrapper.find("#passwordConf").simulate('change', {target:{value: password}});
     expect(wrapper.find('#submitButton').prop('disabled')).toEqual(false);
     
+
+    
+    
+  });
+
+  it('should be disabled if any of the forms are invalid', () => {
+    const wrapper=mount(<TeamSignUp />);
+    // valid email consts
+    const email = 'valid@gmail.com';
+    const name = 'validname';
+    const dob = '1';
+    const password = 'password';
+
     // check email field
     wrapper.find('#email').simulate('change', {target:{value:'INVALID EMAIL'}});
     expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
@@ -155,12 +168,9 @@ describe('Submit button', () => {
     wrapper.find("#passwordConf").simulate('change', {target:{value: ''}});
     expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
     wrapper.find("#passwordConf").simulate('change', {target:{value: password}}); // change back to be valid
+  })
 
-    
-    
-  });
-
-  it('should handle submit callback in App, and show the proper alert-success', () => {
+  it('should handle submit callback in App (using sinon)', () => {
     
     // set up a sinon spy on the handleSubmit callback of the app
     const handleSubmitSpy = sinon.spy(App.prototype, 'handleSubmit');
@@ -184,6 +194,27 @@ describe('Submit button', () => {
     expect(handleSubmitSpy.called).toEqual(true); // check the sinon spy
     expect(wrapper.find('.alert-success').length).toEqual(1); // check if the alert showed up
     
+  });
+
+  it('should show the proper alert-success element when submit is clicked', () => {
+    const wrapper=mount(<App />);
+
+    // valid form consts
+    const email = 'valid@gmail.com';
+    const name = 'validname';
+    const dob = '1';
+    const password = 'password';
+    
+    //simulate valid inputs
+    wrapper.find('#email').simulate('change', {target:{value: email}});
+    wrapper.find('#name').simulate('change', {target:{value: name}});
+    wrapper.find('#dob').simulate('change', {target:{value: dob}}); 
+    wrapper.find('#password').simulate('change', {target:{value: password}});
+    wrapper.find('#passwordConf').simulate('change', {target:{value: password}});
+    
+    wrapper.find('form').simulate('submit');
+    
+    expect(wrapper.find('.alert-success').length).toEqual(1); // check if the alert showed up
   });
 });
 
