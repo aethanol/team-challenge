@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import {shallow, mount} from 'enzyme';
 
-import SignUpForm from './TeamSignUp';
+import TeamSignUp from './TeamSignUp';
 import { EmailInput, RequiredInput, BirthdayInput, PasswordConfirmationInput } from './TeamSignUp';
 import sinon from 'sinon';
 
@@ -11,7 +11,6 @@ it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<App />, div);
 });
-
 
 
 describe('<BirthdayInput /> component', () => {
@@ -102,21 +101,23 @@ describe("<PasswordConfirmationInput /> component", () => {
   })
   
   it ('should be able to tell if the passwords do not match', ()  => {
-     const wrapper=shallow(<PasswordConfirmationInput value={'hi'} password={'not-a-match'}/>)
-     var passwordsMatch = wrapper.find('.error-mismatched').text();
-     expect(passwordsMatch).toEqual("passwords don't match");
+     const wrapper=mount(<TeamSignUp />);
+     wrapper.find('#password').simulate('change', {target:{value: 'password'}});
+     wrapper.find("#passwordConf").simulate('change', {target:{value: 'notmatch'}});
+     expect(wrapper.find('.error-mismatched').text()).toEqual("passwords don't match");
   });
 
   it('should be able to tell if the passwords match', () => {
-      const wrapper=shallow(<PasswordConfirmationInput value={'match'} password={'match'}/>)
-      var passwordsMatch = wrapper.find('.error-mismatched').length;
-      expect(passwordsMatch).toEqual(0);
+      const wrapper=mount(<TeamSignUp />);
+      wrapper.find('#password').simulate('change', {target:{value: 'password'}});
+      wrapper.find("#passwordConf").simulate('change', {target:{value: 'password'}});
+      expect(wrapper.find('.error-mismatched').length).toEqual(0);
   });
 });
 
 describe('Submit button', () => {
   it('should be disabled if any of the forms are invalid, but not if they are valid', () => {
-    const wrapper=mount(<SignUpForm />);
+    const wrapper=mount(<TeamSignUp />);
     // valid email consts
     const email = 'valid@gmail.com';
     const name = 'validname';
@@ -151,21 +152,20 @@ describe('Submit button', () => {
     wrapper.find('#password').simulate('change', {target:{value: password}}); // change back to be valid
     
     // check password conf field
-    wrapper.find("#passwordConf").simulate('change', {target:{value: 'eh'}});
+    wrapper.find("#passwordConf").simulate('change', {target:{value: ''}});
     expect(wrapper.find('#submitButton').prop('disabled')).toEqual(true);
     wrapper.find("#passwordConf").simulate('change', {target:{value: password}}); // change back to be valid
 
-    //
-    // console.log(wrapper.state());
+    
     
   });
 
   it('should handle clicks properly', () => {
-    
-    //const handleSubmitSpy = sinon.spy(SignUpForm.prototype, 'handleSubmit');
+    const wrapper=mount(<App />);
+    const handleSubmitSpy = sinon.spy(App.prototype, 'handleSubmit');
 
-    const clickSpy = sinon.spy();
-    const wrapper=mount(<SignUpForm handleSubmit={clickSpy}/>);
+    //const clickSpy = sinon.spy();
+    
     // valid email consts
     const email = 'valid@gmail.com';
     const name = 'validname';
@@ -179,8 +179,9 @@ describe('Submit button', () => {
     wrapper.find("#passwordConf").simulate('change', {target:{value: password}});
     wrapper.find('#submitButton').simulate('click');
     //expect(wrapper.find('#submitButton').prop('disabled')).toEqual(false);
+    //var param = handleSubmitSpy.getCall(0).args[0];
     //console.log(param);
-    expect(clickSpy.called).toEqual(true);
+    expect(handleSubmitSpy.calledOnce).toEqual(true);
     
   });
 });

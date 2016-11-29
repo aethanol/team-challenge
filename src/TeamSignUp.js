@@ -39,7 +39,7 @@ class SignUpForm extends React.Component {
 
   render() {
     //if all fields are valid, button should be enabled
-    var buttonEnabled = (this.state.email.valid && this.state.name.valid && this.state.dob.valid && this.state.password.valid && this.state.passwordConf.valid);
+    var buttonEnabled = (this.state.email.valid && this.state.name.valid && this.state.dob.valid && this.state.password.valid && !this.state.passwordConf.mismatched && this.state.passwordConf.valid);
     
     return (
       <form name="signupForm" onSubmit={(e) => this.handleSubmit(e)}>
