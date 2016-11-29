@@ -86,7 +86,6 @@ describe('<RequiredInput /> password component', () => {
 
 });
 
-
 describe("<PasswordConfirmationInput /> component", () => {
   
   it ('should be able to tell if the form is empty', () => {
@@ -123,7 +122,8 @@ describe('Submit button', () => {
     const name = 'validname';
     const dob = '1';
     const password = 'password';
-
+    
+    // simulate valid inputs
     wrapper.find('#email').simulate('change', {target:{value: email}});
     wrapper.find('#name').simulate('change', {target:{value: name}});
     wrapper.find('#dob').simulate('change', {target:{value: dob}}); 
@@ -160,28 +160,29 @@ describe('Submit button', () => {
     
   });
 
-  it('should handle clicks properly', () => {
-    const wrapper=mount(<App />);
-    const handleSubmitSpy = sinon.spy(App.prototype, 'handleSubmit');
-
-    //const clickSpy = sinon.spy();
+  it('should handle submit callback in App, and show the proper alert-success', () => {
     
-    // valid email consts
+    // set up a sinon spy on the handleSubmit callback of the app
+    const handleSubmitSpy = sinon.spy(App.prototype, 'handleSubmit');
+    const wrapper=mount(<App />);
+
+    // valid form consts
     const email = 'valid@gmail.com';
     const name = 'validname';
     const dob = '1';
     const password = 'password';
-
+    
+    //simulate valid inputs
     wrapper.find('#email').simulate('change', {target:{value: email}});
     wrapper.find('#name').simulate('change', {target:{value: name}});
     wrapper.find('#dob').simulate('change', {target:{value: dob}}); 
     wrapper.find('#password').simulate('change', {target:{value: password}});
-    wrapper.find("#passwordConf").simulate('change', {target:{value: password}});
-    wrapper.find('#submitButton').simulate('click');
-    //expect(wrapper.find('#submitButton').prop('disabled')).toEqual(false);
-    //var param = handleSubmitSpy.getCall(0).args[0];
-    //console.log(param);
-    expect(handleSubmitSpy.calledOnce).toEqual(true);
+    wrapper.find('#passwordConf').simulate('change', {target:{value: password}});
+    
+    wrapper.find('form').simulate('submit');
+    
+    expect(handleSubmitSpy.called).toEqual(true); // check the sinon spy
+    expect(wrapper.find('.alert-success').length).toEqual(1); // check if the alert showed up
     
   });
 });
