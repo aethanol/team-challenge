@@ -35,9 +35,14 @@ describe("<PasswordConfirmationInput> component", () => {
 describe("reset button", () => {
   
   it ('should reset all fields to be empty upon clicking', () => {
-    const wrapper=shallow(<SignUpForm email="10@10.com" name="Oorja" dob="sfdsdf" password="fhdsofwe" passwordConf="dslfhwoeh"/>);
 
-    console.log(wrapper.state());
+    const wrapper=mount(<SignUpForm />);
+
+    wrapper.find('#email').simulate('change', {target:{value:'10@10.com'}});
+    wrapper.find('#name').simulate('change', {target:{value:'Guy'}});
+    wrapper.find('#dob').simulate('change', {target:{value:'1/1/61'}});
+    wrapper.find('#password').simulate('change', {target:{value:'password'}});
+    wrapper.find('#passwordConf').simulate('change', {target:{value:'password'}});
     
     wrapper.find('#resetButton').simulate('click');
 
@@ -52,13 +57,14 @@ describe("reset button", () => {
   it ('should be able to call the handle reset function upon clicking', () => {
     var resetSpy = sinon.spy(SignUpForm.prototype, 'handleReset')
     
-    const wrapper=shallow(<SignUpForm email="10@10.com" name="Oorja" dob="sfdsdf" password="fhdsofwe" passwordConf="dslfhwoeh"/>);
+    const wrapper=shallow(<SignUpForm />);
 
     wrapper.find('#resetButton').simulate('click');
 
     expect(resetSpy.called).toEqual(true);
   })
 });
+
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
